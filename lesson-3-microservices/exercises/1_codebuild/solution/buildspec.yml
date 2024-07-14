@@ -5,19 +5,19 @@ env:
     AWS_DEFAULT_REGION: "us-east-1"
     IMAGE_REPO_NAME: "udacity_microservice_komal"
     IMAGE_TAG: "latest"
-    DOCKERFILE_PATH: "lesson-3-microservices/exercises/1_codebuild/starter/Dockerfile"
+    DOCKERFILE_PATH: "lesson-3-microservices/exercises/1_codebuild/starter"
 
 phases:
   pre_build:
     commands:
       - echo Logging into ECR
-      - ls
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACC_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
       - echo Starting build at `date`
-      - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG -f $DOCKERFILE_PATH
+      - echo Building the Docker image...
+      - cd DOCKERFILE_PATH
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACC_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
   post_build:
     commands:
